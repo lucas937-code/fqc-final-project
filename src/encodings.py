@@ -65,8 +65,13 @@ class AngleEncoding:
 @dataclass(frozen=True)
 class AmplitudeEncoding:
     name: str = "amplitude"
+    fixed_n_qubits: Optional[int] = None
 
     def n_qubits(self, n_features: int) -> int:
+        if self.fixed_n_qubits is not None:
+            if self.fixed_n_qubits < 1:
+                raise ValueError("fixed_n_qubits must be >= 1")
+            return int(self.fixed_n_qubits)
         # smallest n such that 2^n >= n_features
         return int(np.ceil(np.log2(max(1, n_features))))
 
